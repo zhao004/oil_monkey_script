@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         翻译机
-// @version      1.0.0
+// @version      1.0.1
 // @namespace    https://github.com/zhao004
 // @description  该脚本用于翻译各类常用社交网站为中文，不会经过中间服务器。
 // @author       HolynnChen/zhao
