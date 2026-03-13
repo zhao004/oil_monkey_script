@@ -45,7 +45,6 @@
 // @downloadURL  https://github.com/zhao004/oil_monkey_script/blob/master/translator/translator.user.js
 // ==/UserScript==
 
-
 GM_registerMenuCommand('重置控制面板位置(刷新应用)', () => {
     GM_setValue('position_top', '9px');
     GM_setValue('position_right', '9px');
