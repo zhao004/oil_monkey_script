@@ -109,7 +109,7 @@ function initPanel() {
     let choice = GM_getValue('translate_choice', '谷歌翻译');
     let select = document.createElement("select");
     select.className = 'js_translate';
-    select.style = 'height:35px;width:100px;background-color:#fff;border-radius:17.5px;text-align-last:center;color:#000000;margin:5px 0';
+    select.style = 'height:36px;width:180px;background:#fff;border-radius:8px;text-align-last:center;color:#374151;margin:8px 0;border:1px solid #e5e7eb;font-size:14px;padding:0 12px;outline:none;cursor:pointer;transition:border-color 0.2s;appearance:auto;';
     select.onchange = () => {
         GM_setValue('translate_choice', select.value);
         title.innerText = "控制面板（请刷新以应用）"
@@ -117,14 +117,30 @@ function initPanel() {
     for (let i in transdict) select.innerHTML = p.createHTML(select.innerHTML + '<option value="' + i + '">' + i + '</option>');
     //
     let enable_details = document.createElement('details');
-    enable_details.innerHTML = p.createHTML(enable_details.innerHTML + "<summary>启用规则</summary>");
+    enable_details.style.cssText = "width:100%;margin:8px 0;border:1px solid #e5e7eb;border-radius:10px;padding:0;overflow:hidden;";
+    enable_details.innerHTML = p.createHTML(enable_details.innerHTML + "<summary style='padding:10px 14px;cursor:pointer;font-size:14px;font-weight:500;color:#4b5563;background:#f9fafb;user-select:none;'>启用规则</summary>");
+    const enableRulesContainer = document.createElement('div');
+    enableRulesContainer.style.cssText = "padding:8px 14px;";
+    enable_details.appendChild(enableRulesContainer);
     for (let i of rules) {
+        let ruleRow = document.createElement('label');
+        ruleRow.style.cssText = "display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;font-size:13px;color:#374151;cursor:pointer;transition:background-color 0.15s;";
+        ruleRow.addEventListener("mouseenter", () => {
+            ruleRow.style.backgroundColor = "rgba(99,102,241,0.06)";
+        });
+        ruleRow.addEventListener("mouseleave", () => {
+            ruleRow.style.backgroundColor = "transparent";
+        });
         let temp = document.createElement('input');
         temp.type = 'checkbox';
         temp.name = i.name;
+        temp.style.cssText = "accent-color:#6366f1;width:15px;height:15px;cursor:pointer;";
         if (GM_getValue("enable_rule:" + temp.name, true)) temp.setAttribute('checked', true)
-        enable_details.appendChild(temp);
-        enable_details.innerHTML = p.createHTML(enable_details.innerHTML + "<span>" + i.name + "</span><br>");
+        ruleRow.appendChild(temp);
+        const ruleLabel = document.createElement('span');
+        ruleLabel.textContent = i.name;
+        ruleRow.appendChild(ruleLabel);
+        enableRulesContainer.appendChild(ruleRow);
     }
     let current_details = document.createElement('details');
     let mask = document.createElement('div'), dialog = document.createElement("div"),
@@ -139,17 +155,28 @@ function initPanel() {
     dialog.appendChild(js_dialog);
     mask.appendChild(dialog);
     js_dialog.appendChild(title)
+    const selectLabel = document.createElement('div');
+    selectLabel.style.cssText = "font-size:12px;color:#9ca3af;margin-bottom:2px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;";
+    selectLabel.textContent = "翻译引擎";
+    js_dialog.appendChild(selectLabel);
     js_dialog.appendChild(document.createElement('p').appendChild(select));
+    const divider = document.createElement('div');
+    divider.style.cssText = "width:100%;height:1px;background:#e5e7eb;margin:12px 0;";
+    js_dialog.appendChild(divider);
+    const settingsLabel = document.createElement('div');
+    settingsLabel.style.cssText = "font-size:12px;color:#9ca3af;margin-bottom:4px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;align-self:flex-start;";
+    settingsLabel.textContent = "通用设置";
+    js_dialog.appendChild(settingsLabel);
     js_dialog.appendChild(document.createElement('p').appendChild(enable_details));
     js_dialog.appendChild(document.createElement('p').appendChild(current_details));
     //
-    mask.style = "display: none;position: fixed;height: 100vh;width: 100vw;z-index: 99999;top: 0;left: 0;overflow: hidden;background-color: rgba(0,0,0,0.4);justify-content: center;align-items: center;visibility: visible;"
+    mask.style = "display:none;position:fixed;height:100vh;width:100vw;z-index:99999;top:0;left:0;overflow:hidden;background-color:rgba(0,0,0,0.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);justify-content:center;align-items:center;visibility:visible;transition:background-color 0.3s;"
     mask.addEventListener('click', event => {
         if (event.target === mask) mask.style.display = 'none'
     });
-    dialog.style = 'padding:0;border-radius:10px;background-color: #fff;box-shadow: 0 0 5px 4px rgba(0,0,0,0.3);';
-    js_dialog.style = "min-height:10vh;min-width:10vw;display:flex;flex-direction:column;align-items:center;padding:10px;border-radius:4px;color:#000";
-    title.style = 'margin:5px 0;font-size:20px;';
+    dialog.style = 'padding:0;border-radius:16px;background-color:#fff;box-shadow:0 20px 60px rgba(0,0,0,0.15),0 0 0 1px rgba(0,0,0,0.05);max-height:80vh;overflow-y:auto;min-width:300px;';
+    js_dialog.style = "min-height:10vh;display:flex;flex-direction:column;align-items:center;padding:20px 24px;border-radius:16px;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;";
+    title.style = 'margin:0 0 12px 0;font-size:18px;font-weight:600;color:#1f2937;letter-spacing:0.5px;';
     title.innerText = "控制面板";
     for (let i in baseoptions) {
         let temp = document.createElement('input'), temp_p = document.createElement('p');
@@ -157,7 +184,14 @@ function initPanel() {
         temp_p.appendChild(temp);
         temp.type = 'checkbox';
         temp.name = i;
-        temp_p.style = "display:flex;align-items: center;margin:5px 0"
+        temp.style.cssText = "accent-color:#6366f1;width:15px;height:15px;cursor:pointer;";
+        temp_p.style = "display:flex;align-items:center;margin:4px 0;padding:6px 10px;border-radius:8px;font-size:14px;color:#374151;cursor:pointer;transition:background-color 0.15s;gap:8px;width:100%;box-sizing:border-box;"
+        temp_p.addEventListener("mouseenter", () => {
+            temp_p.style.backgroundColor = "rgba(99,102,241,0.06)";
+        });
+        temp_p.addEventListener("mouseleave", () => {
+            temp_p.style.backgroundColor = "transparent";
+        });
         temp_p.innerHTML = p.createHTML(temp_p.innerHTML + baseoptions[i].declare);
     }
     for (let i of js_dialog.querySelectorAll('input')) {
@@ -176,28 +210,40 @@ function initPanel() {
         GM_setValue('enable_rule:' + i.name, i.checked)
     }
     let open = document.createElement('div');
-    open.style = `z-index:9999;height:35px;width:35px;background-color:#fff;position:fixed;border:1px solid rgba(0,0,0,0.2);border-radius:17.5px;right:${GM_getValue('position_right', '9px')};top:${GM_getValue('position_top', '9px')};text-align-last:center;color:#000000;display:flex;align-items:center;justify-content:center;cursor: pointer;font-size:15px;user-select:none;visibility: visible;`;
+    open.style = `z-index:9999;height:40px;width:40px;background:linear-gradient(135deg,#6366f1,#a855f7);position:fixed;border:none;border-radius:50%;right:${GM_getValue('position_right', '9px')};top:${GM_getValue('position_top', '9px')};text-align-last:center;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;user-select:none;visibility:visible;box-shadow:0 2px 12px rgba(99,102,241,0.4);transition:transform 0.2s ease,box-shadow 0.2s ease;font-weight:600;letter-spacing:1px;`;
     open.innerHTML = p.createHTML("译");
+    open.addEventListener("mouseenter", () => {
+        open.style.transform = "scale(1.1)";
+        open.style.boxShadow = "0 4px 20px rgba(99,102,241,0.55)";
+    });
+    open.addEventListener("mouseleave", () => {
+        open.style.transform = "scale(1)";
+        open.style.boxShadow = "0 2px 12px rgba(99,102,241,0.4)";
+    });
     const renderCurrentRule = () => {
         // 触发启用规则重建
         current_details.style.display = "none";
         current_details.innerHTML = p.createHTML('');
         const currentRule = GetActiveRule();
         if (currentRule) {
-            current_details.style.display = "flex";
-            current_details.innerHTML = p.createHTML(`<summary>当前启用-${currentRule.name}</summary>`)
+            current_details.style.cssText = "display:flex;flex-direction:column;width:100%;margin:8px 0;border:1px solid #e5e7eb;border-radius:10px;padding:0;overflow:hidden;";
+            current_details.innerHTML = p.createHTML(`<summary style="padding:10px 14px;cursor:pointer;font-size:14px;font-weight:500;color:#4b5563;background:#f9fafb;user-select:none;">当前启用 - ${currentRule.name}</summary>`)
+            const optionsContainer = document.createElement('div');
+            optionsContainer.style.cssText = "padding:10px 14px;display:flex;flex-direction:column;gap:10px;";
+            current_details.appendChild(optionsContainer);
             for (const option of currentRule.options) {
                 const fieldset = document.createElement("fieldset")
-                fieldset.innerHTML = p.createHTML(fieldset.innerHTML + `<legend>${option.name}</legend>`)
-                current_details.appendChild(fieldset);
-                fieldset.innerHTML = p.createHTML(fieldset.innerHTML + `<div style="display:flex;align-items:center"><span>启用翻译</span><input type="checkbox"></input></div>`)
+                fieldset.style.cssText = "border:1px solid #e5e7eb;border-radius:8px;padding:10px 12px;margin:0;";
+                fieldset.innerHTML = p.createHTML(fieldset.innerHTML + `<legend style="font-size:13px;font-weight:500;color:#6366f1;padding:0 6px;">${option.name}</legend>`)
+                optionsContainer.appendChild(fieldset);
+                fieldset.innerHTML = p.createHTML(fieldset.innerHTML + `<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#374151;cursor:pointer;padding:4px 0;"><input type="checkbox" style="accent-color:#6366f1;width:15px;height:15px;cursor:pointer;"><span>启用翻译</span></label>`)
                 for (const key in baseoptions) {
                     if (!baseoptions[key].option_enable) {
                         continue;
                     }
-                    fieldset.innerHTML = p.createHTML(fieldset.innerHTML + `<span>${baseoptions[key].declare}</span><br>`)
+                    fieldset.innerHTML = p.createHTML(fieldset.innerHTML + `<div style="font-size:13px;color:#4b5563;margin-top:6px;">${baseoptions[key].declare}</div>`)
                     const baseValueList = [["", "默认"], ["true", "启用"], ["false", "禁用"]]
-                    fieldset.innerHTML = p.createHTML(fieldset.innerHTML + "<div>" + baseValueList.map(value => `<input type="radio" value="${value[0]}" name="${key}:${currentRule.name}-${option.name}">${value[1]}</input>`).join('') + "</div>")
+                    fieldset.innerHTML = p.createHTML(fieldset.innerHTML + `<div style="display:flex;gap:12px;margin:4px 0 2px 0;">` + baseValueList.map(value => `<label style="display:flex;align-items:center;gap:4px;font-size:12px;color:#6b7280;cursor:pointer;"><input type="radio" value="${value[0]}" name="${key}:${currentRule.name}-${option.name}" style="accent-color:#6366f1;cursor:pointer;">${value[1]}</label>`).join('') + "</div>")
                 }
                 // 补充值与事件
                 const enableInput = fieldset.querySelector('input[type=checkbox]')
@@ -604,24 +650,42 @@ function baseTextSetter({element, translatorName, text, rawText, rule, option}) 
     const currentShowInfo = GM_getValue("option_setting:show_info:" + rule.name + "-" + option.name, show_info)
     if (currentReplaceTranslate) {
         const spanNode = document.createElement('span');
-        spanNode.style.whiteSpace = "pre-wrap";
-        spanNode.innerText = `${currentShowInfo ? "-----------" + translatorName + "-----------\n\n" : ""}` + text;
+        spanNode.style.cssText = "white-space:pre-wrap;display:block;margin:4px 0;padding:8px 12px;border-radius:8px;background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.06));border-left:3px solid rgba(99,102,241,0.5);font-size:inherit;line-height:1.6;color:inherit;";
+        if (currentShowInfo) {
+            const badge = document.createElement('span');
+            badge.style.cssText = "display:inline-flex;align-items:center;gap:4px;font-size:11px;color:rgba(99,102,241,0.8);font-weight:500;margin-bottom:4px;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,0.08);line-height:1;";
+            badge.textContent = '\u2728 ' + translatorName;
+            spanNode.appendChild(badge);
+            spanNode.appendChild(document.createElement('br'));
+        }
+        const textNode = document.createTextNode(text);
+        spanNode.appendChild(textNode);
         spanNode.dataset.translate = "processed";
         spanNode.title = rawText;
-        spanNode.class = "translate-processed-node"
+        spanNode.className = "translate-processed-node";
         element.innerHTML = p.createHTML('');
         element.appendChild(spanNode);
         element.style.cssText += "-webkit-line-clamp: unset;max-height: unset";
         return spanNode;
     } else {
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = "margin-top:8px;padding:8px 12px;border-radius:8px;background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.06));border-left:3px solid rgba(99,102,241,0.5);font-size:inherit;line-height:1.6;color:inherit;";
+        wrapper.dataset.translate = "processed";
+        wrapper.className = "translate-processed-node";
+        if (currentShowInfo) {
+            const badge = document.createElement('span');
+            badge.style.cssText = "display:inline-flex;align-items:center;gap:4px;font-size:11px;color:rgba(99,102,241,0.8);font-weight:500;margin-bottom:4px;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,0.08);line-height:1;";
+            badge.textContent = '\u2728 ' + translatorName;
+            wrapper.appendChild(badge);
+            wrapper.appendChild(document.createElement('br'));
+        }
         const spanNode = document.createElement('span');
         spanNode.style.whiteSpace = "pre-wrap";
-        spanNode.innerText = `\n\n${currentShowInfo ? "-----------" + translatorName + "-----------\n\n" : ""}` + text;
-        spanNode.dataset.translate = "processed";
-        spanNode.class = "translate-processed-node"
-        element.appendChild(spanNode);
+        spanNode.textContent = text;
+        wrapper.appendChild(spanNode);
+        element.appendChild(wrapper);
         element.style.cssText += "-webkit-line-clamp: unset;max-height: unset";
-        return spanNode;
+        return wrapper;
     }
 
 }
