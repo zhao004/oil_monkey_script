@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         翻译机
-// @version      1.0.2
+// @version      1.0.3
 // @namespace    https://github.com/zhao004
 // @description  该脚本用于翻译各类常用社交网站为中文，不会经过中间服务器。
 // @author       HolynnChen/zhao
@@ -674,10 +674,10 @@ function baseTextSetter({element, translatorName, text, rawText, rule, option}) 
     const currentShowInfo = GM_getValue("option_setting:show_info:" + rule.name + "-" + option.name, show_info)
     if (currentReplaceTranslate) {
         const spanNode = document.createElement('span');
-        spanNode.style.cssText = "white-space:pre-wrap;display:block;margin:4px 0;padding:10px 14px;border-radius:8px;background:" + cardBg + ";border-left:" + cardBorder + ";font-size:inherit;line-height:1.6;color:inherit;";
+        spanNode.style.cssText = "white-space:pre-wrap;display:block;margin:4px 0;padding:10px 14px;border-radius:8px;background:" + cardBg + ";border-top:" + cardBorder + ";font-size:inherit;line-height:1.6;color:inherit;";
         if (currentShowInfo) {
             const badge = document.createElement('span');
-            badge.style.cssText = "display:inline-flex;align-items:center;gap:4px;font-size:11px;color:" + badgeColor + ";font-weight:500;margin-bottom:6px;padding:2px 8px;border-radius:10px;background:" + badgeBg + ";line-height:1;";
+            badge.style.cssText = "display:flex;justify-content:center;align-items:center;gap:4px;font-size:11px;color:" + badgeColor + ";font-weight:500;margin-bottom:6px;padding:2px 8px;border-radius:10px;background:" + badgeBg + ";line-height:1;width:fit-content;margin-left:auto;margin-right:auto;";
             badge.textContent = badgeIcon + ' ' + translatorName;
             spanNode.appendChild(badge);
             spanNode.appendChild(document.createElement('br'));
@@ -695,12 +695,12 @@ function baseTextSetter({element, translatorName, text, rawText, rule, option}) 
         return spanNode;
     } else {
         const wrapper = document.createElement('div');
-        wrapper.style.cssText = "margin-top:8px;padding:10px 14px;border-radius:8px;background:" + cardBg + ";border-left:" + cardBorder + ";font-size:inherit;line-height:1.6;color:inherit;";
+        wrapper.style.cssText = "margin-top:8px;padding:10px 14px;border-radius:8px;background:" + cardBg + ";border-top:" + cardBorder + ";font-size:inherit;line-height:1.6;color:inherit;";
         wrapper.dataset.translate = "processed";
         wrapper.className = "translate-processed-node";
         if (currentShowInfo) {
             const badge = document.createElement('span');
-            badge.style.cssText = "display:inline-flex;align-items:center;gap:4px;font-size:11px;color:" + badgeColor + ";font-weight:500;margin-bottom:6px;padding:2px 8px;border-radius:10px;background:" + badgeBg + ";line-height:1;";
+            badge.style.cssText = "display:flex;justify-content:center;align-items:center;gap:4px;font-size:11px;color:" + badgeColor + ";font-weight:500;margin-bottom:6px;padding:2px 8px;border-radius:10px;background:" + badgeBg + ";line-height:1;width:fit-content;margin-left:auto;margin-right:auto;";
             badge.textContent = badgeIcon + ' ' + translatorName;
             wrapper.appendChild(badge);
             wrapper.appendChild(document.createElement('br'));
