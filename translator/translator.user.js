@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         翻译机
-// @version      1.0.4
+// @version      1.0.5
 // @namespace    https://github.com/zhao004
 // @description  该脚本用于翻译各类常用社交网站为中文，不会经过中间服务器。
 // @author       HolynnChen/zhao
@@ -676,7 +676,7 @@ function baseTextSetter({element, translatorName, text, rawText, rule, option}) 
     const currentShowInfo = GM_getValue("option_setting:show_info:" + rule.name + "-" + option.name, show_info)
     if (currentReplaceTranslate) {
         const spanNode = document.createElement('span');
-        spanNode.style.cssText = "white-space:pre-wrap;display:flex;flex-direction:column;align-items:stretch;margin:6px 0;padding:11px 14px 12px;border-radius:10px;background:" + cardBg + ";border:" + cardStroke + ";border-top:" + cardBorder + ";box-shadow:" + cardShadow + ";font-size:inherit;line-height:1.6;color:inherit;position:relative;overflow:hidden;";
+        spanNode.style.cssText = "white-space:pre-wrap;display:flex;flex-direction:column;align-items:stretch;margin:6px 0;padding:12px 14px 13px;border-radius:10px;background:" + cardBg + ";border:" + cardStroke + ";border-top:" + cardBorder + ";box-shadow:" + cardShadow + ";font-size:inherit;line-height:1.6;color:inherit;position:relative;overflow:hidden;";
         if (currentShowInfo) {
             const badge = document.createElement('span');
             badge.style.cssText = "display:inline-flex;justify-content:center;align-items:center;align-self:flex-end;gap:3px;font-size:10px;color:" + badgeColor + ";font-weight:600;margin:0 0 8px 0;padding:3px 7px;border-radius:999px;background:" + badgeBg + ";line-height:1;max-width:100%;box-shadow:0 1px 2px rgba(0,0,0,0.04);letter-spacing:0.2px;";
@@ -687,7 +687,7 @@ function baseTextSetter({element, translatorName, text, rawText, rule, option}) 
             spanNode.appendChild(divider);
         }
         const boldNode = document.createElement('b');
-        boldNode.style.cssText = "font-weight:700;font-size:inherit;color:" + (isError ? "#ef4444" : "inherit") + ";";
+        boldNode.style.cssText = "font-weight:600;font-size:inherit;color:" + (isError ? "#ef4444" : "inherit") + ";";
         boldNode.textContent = text;
         spanNode.appendChild(boldNode);
         spanNode.dataset.translate = "processed";
@@ -699,7 +699,7 @@ function baseTextSetter({element, translatorName, text, rawText, rule, option}) 
         return spanNode;
     } else {
         const wrapper = document.createElement('div');
-        wrapper.style.cssText = "margin-top:8px;padding:11px 14px 12px;border-radius:10px;background:" + cardBg + ";border:" + cardStroke + ";border-top:" + cardBorder + ";box-shadow:" + cardShadow + ";font-size:inherit;line-height:1.6;color:inherit;display:flex;flex-direction:column;align-items:stretch;position:relative;overflow:hidden;";
+        wrapper.style.cssText = "margin-top:8px;padding:12px 14px 13px;border-radius:10px;background:" + cardBg + ";border:" + cardStroke + ";border-top:" + cardBorder + ";box-shadow:" + cardShadow + ";font-size:inherit;line-height:1.6;color:inherit;display:flex;flex-direction:column;align-items:stretch;position:relative;overflow:hidden;";
         wrapper.dataset.translate = "processed";
         wrapper.className = "translate-processed-node";
         if (currentShowInfo) {
@@ -712,7 +712,7 @@ function baseTextSetter({element, translatorName, text, rawText, rule, option}) 
             wrapper.appendChild(divider);
         }
         const spanNode = document.createElement('span');
-        spanNode.style.cssText = "white-space:pre-wrap;font-weight:700;color:" + (isError ? "#ef4444" : "inherit") + ";"
+        spanNode.style.cssText = "white-space:pre-wrap;font-weight:600;color:" + (isError ? "#ef4444" : "inherit") + ";";
         spanNode.textContent = text;
         wrapper.appendChild(spanNode);
         element.appendChild(wrapper);
