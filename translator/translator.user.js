@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         翻译机
-// @version      1.0.1
+// @version      1.0.2
 // @namespace    https://github.com/zhao004
 // @description  该脚本用于翻译各类常用社交网站为中文，不会经过中间服务器。
 // @author       HolynnChen/zhao
@@ -110,10 +110,20 @@ function initPanel() {
     let select = document.createElement("select");
     select.className = 'js_translate';
     select.style = 'height:36px;width:180px;background:#fff;border-radius:8px;text-align-last:center;color:#374151;margin:8px 0;border:1px solid #e5e7eb;font-size:14px;padding:0 12px;outline:none;cursor:pointer;transition:border-color 0.2s,box-shadow 0.2s;appearance:auto;';
-    select.addEventListener("mouseenter", () => { select.style.borderColor = "#a5b4fc"; });
-    select.addEventListener("mouseleave", () => { if (document.activeElement !== select) select.style.borderColor = "#e5e7eb"; });
-    select.addEventListener("focus", () => { select.style.borderColor = "#6366f1"; select.style.boxShadow = "0 0 0 3px rgba(99,102,241,0.15)"; });
-    select.addEventListener("blur", () => { select.style.borderColor = "#e5e7eb"; select.style.boxShadow = "none"; });
+    select.addEventListener("mouseenter", () => {
+        select.style.borderColor = "#a5b4fc";
+    });
+    select.addEventListener("mouseleave", () => {
+        if (document.activeElement !== select) select.style.borderColor = "#e5e7eb";
+    });
+    select.addEventListener("focus", () => {
+        select.style.borderColor = "#6366f1";
+        select.style.boxShadow = "0 0 0 3px rgba(99,102,241,0.15)";
+    });
+    select.addEventListener("blur", () => {
+        select.style.borderColor = "#e5e7eb";
+        select.style.boxShadow = "none";
+    });
     select.onchange = () => {
         GM_setValue('translate_choice', select.value);
         title.innerText = "控制面板（请刷新以应用）"
