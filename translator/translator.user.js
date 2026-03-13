@@ -661,9 +661,9 @@ function baseTextGetter(e) {
 function baseTextSetter({element, translatorName, text, rawText, rule, option}) {//change element text
     const isError = (text || "").length == 0;
     if (isError) text = '翻译异常';
-    const errorBg = "linear-gradient(135deg,rgba(239,68,68,0.06),rgba(249,115,22,0.06))";
+    const errorBg = "linear-gradient(135deg,rgba(239,68,68,0.04),rgba(249,115,22,0.04))";
     const errorBorder = "3px solid rgba(239,68,68,0.5)";
-    const normalBg = "linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.06))";
+    const normalBg = "linear-gradient(135deg,rgba(99,102,241,0.04),rgba(168,85,247,0.04))";
     const normalBorder = "3px solid rgba(99,102,241,0.5)";
     const cardBg = isError ? errorBg : normalBg;
     const cardBorder = isError ? errorBorder : normalBorder;
@@ -682,6 +682,9 @@ function baseTextSetter({element, translatorName, text, rawText, rule, option}) 
             badge.style.cssText = "display:inline-flex;justify-content:center;align-items:center;align-self:flex-end;gap:3px;font-size:10px;color:" + badgeColor + ";font-weight:600;margin:0 0 8px 0;padding:3px 7px;border-radius:999px;background:" + badgeBg + ";line-height:1;max-width:100%;box-shadow:0 1px 2px rgba(0,0,0,0.04);letter-spacing:0.2px;";
             badge.textContent = badgeIcon + ' ' + translatorName;
             spanNode.appendChild(badge);
+            const divider = document.createElement('span');
+            divider.style.cssText = "display:block;height:1px;width:100%;margin:0 0 10px 0;background:linear-gradient(90deg,transparent," + (isError ? "rgba(239,68,68,0.18)" : "rgba(99,102,241,0.18)") + ",transparent);";
+            spanNode.appendChild(divider);
         }
         const boldNode = document.createElement('b');
         boldNode.style.cssText = "font-weight:700;font-size:inherit;color:" + (isError ? "#ef4444" : "inherit") + ";";
@@ -704,6 +707,9 @@ function baseTextSetter({element, translatorName, text, rawText, rule, option}) 
             badge.style.cssText = "display:inline-flex;justify-content:center;align-items:center;align-self:flex-end;gap:3px;font-size:10px;color:" + badgeColor + ";font-weight:600;margin:0 0 8px 0;padding:3px 7px;border-radius:999px;background:" + badgeBg + ";line-height:1;max-width:100%;box-shadow:0 1px 2px rgba(0,0,0,0.04);letter-spacing:0.2px;";
             badge.textContent = badgeIcon + ' ' + translatorName;
             wrapper.appendChild(badge);
+            const divider = document.createElement('span');
+            divider.style.cssText = "display:block;height:1px;width:100%;margin:0 0 10px 0;background:linear-gradient(90deg,transparent," + (isError ? "rgba(239,68,68,0.18)" : "rgba(99,102,241,0.18)") + ",transparent);";
+            wrapper.appendChild(divider);
         }
         const spanNode = document.createElement('span');
         spanNode.style.cssText = "white-space:pre-wrap;font-weight:700;color:" + (isError ? "#ef4444" : "inherit") + ";"
