@@ -109,7 +109,11 @@ function initPanel() {
     let choice = GM_getValue('translate_choice', '谷歌翻译');
     let select = document.createElement("select");
     select.className = 'js_translate';
-    select.style = 'height:36px;width:180px;background:#fff;border-radius:8px;text-align-last:center;color:#374151;margin:8px 0;border:1px solid #e5e7eb;font-size:14px;padding:0 12px;outline:none;cursor:pointer;transition:border-color 0.2s;appearance:auto;';
+    select.style = 'height:36px;width:180px;background:#fff;border-radius:8px;text-align-last:center;color:#374151;margin:8px 0;border:1px solid #e5e7eb;font-size:14px;padding:0 12px;outline:none;cursor:pointer;transition:border-color 0.2s,box-shadow 0.2s;appearance:auto;';
+    select.addEventListener("mouseenter", () => { select.style.borderColor = "#a5b4fc"; });
+    select.addEventListener("mouseleave", () => { if (document.activeElement !== select) select.style.borderColor = "#e5e7eb"; });
+    select.addEventListener("focus", () => { select.style.borderColor = "#6366f1"; select.style.boxShadow = "0 0 0 3px rgba(99,102,241,0.15)"; });
+    select.addEventListener("blur", () => { select.style.borderColor = "#e5e7eb"; select.style.boxShadow = "none"; });
     select.onchange = () => {
         GM_setValue('translate_choice', select.value);
         title.innerText = "控制面板（请刷新以应用）"
@@ -176,7 +180,7 @@ function initPanel() {
     });
     dialog.style = 'padding:0;border-radius:16px;background-color:#fff;box-shadow:0 20px 60px rgba(0,0,0,0.15),0 0 0 1px rgba(0,0,0,0.05);max-height:80vh;overflow-y:auto;min-width:300px;';
     js_dialog.style = "min-height:10vh;display:flex;flex-direction:column;align-items:center;padding:20px 24px;border-radius:16px;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;";
-    title.style = 'margin:0 0 12px 0;font-size:18px;font-weight:600;color:#1f2937;letter-spacing:0.5px;';
+    title.style = 'margin:0 0 12px 0;font-size:18px;font-weight:700;background:linear-gradient(135deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.5px;';
     title.innerText = "控制面板";
     for (let i in baseoptions) {
         let temp = document.createElement('input'), temp_p = document.createElement('p');
@@ -645,21 +649,33 @@ function baseTextGetter(e) {
 }
 
 function baseTextSetter({element, translatorName, text, rawText, rule, option}) {//change element text
-    if ((text || "").length == 0) text = '翻译异常';
+    const isError = (text || "").length == 0;
+    if (isError) text = '翻译异常';
+    const errorBg = "linear-gradient(135deg,rgba(239,68,68,0.06),rgba(249,115,22,0.06))";
+    const errorBorder = "3px solid rgba(239,68,68,0.5)";
+    const normalBg = "linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.06))";
+    const normalBorder = "3px solid rgba(99,102,241,0.5)";
+    const cardBg = isError ? errorBg : normalBg;
+    const cardBorder = isError ? errorBorder : normalBorder;
+    const badgeColor = isError ? "rgba(239,68,68,0.8)" : "rgba(99,102,241,0.8)";
+    const badgeBg = isError ? "rgba(239,68,68,0.08)" : "rgba(99,102,241,0.08)";
+    const badgeIcon = isError ? '\u26a0\ufe0f' : '\u2728';
     const currentReplaceTranslate = GM_getValue("option_setting:replace_translate:" + rule.name + "-" + option.name, replace_translate)
     const currentShowInfo = GM_getValue("option_setting:show_info:" + rule.name + "-" + option.name, show_info)
     if (currentReplaceTranslate) {
         const spanNode = document.createElement('span');
-        spanNode.style.cssText = "white-space:pre-wrap;display:block;margin:4px 0;padding:8px 12px;border-radius:8px;background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.06));border-left:3px solid rgba(99,102,241,0.5);font-size:inherit;line-height:1.6;color:inherit;";
+        spanNode.style.cssText = "white-space:pre-wrap;display:block;margin:4px 0;padding:10px 14px;border-radius:8px;background:" + cardBg + ";border-left:" + cardBorder + ";font-size:inherit;line-height:1.6;color:inherit;";
         if (currentShowInfo) {
             const badge = document.createElement('span');
-            badge.style.cssText = "display:inline-flex;align-items:center;gap:4px;font-size:11px;color:rgba(99,102,241,0.8);font-weight:500;margin-bottom:4px;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,0.08);line-height:1;";
-            badge.textContent = '\u2728 ' + translatorName;
+            badge.style.cssText = "display:inline-flex;align-items:center;gap:4px;font-size:11px;color:" + badgeColor + ";font-weight:500;margin-bottom:6px;padding:2px 8px;border-radius:10px;background:" + badgeBg + ";line-height:1;";
+            badge.textContent = badgeIcon + ' ' + translatorName;
             spanNode.appendChild(badge);
             spanNode.appendChild(document.createElement('br'));
         }
-        const textNode = document.createTextNode(text);
-        spanNode.appendChild(textNode);
+        const boldNode = document.createElement('b');
+        boldNode.style.cssText = "font-weight:700;font-size:inherit;color:" + (isError ? "#ef4444" : "inherit") + ";";
+        boldNode.textContent = text;
+        spanNode.appendChild(boldNode);
         spanNode.dataset.translate = "processed";
         spanNode.title = rawText;
         spanNode.className = "translate-processed-node";
@@ -669,18 +685,18 @@ function baseTextSetter({element, translatorName, text, rawText, rule, option}) 
         return spanNode;
     } else {
         const wrapper = document.createElement('div');
-        wrapper.style.cssText = "margin-top:8px;padding:8px 12px;border-radius:8px;background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.06));border-left:3px solid rgba(99,102,241,0.5);font-size:inherit;line-height:1.6;color:inherit;";
+        wrapper.style.cssText = "margin-top:8px;padding:10px 14px;border-radius:8px;background:" + cardBg + ";border-left:" + cardBorder + ";font-size:inherit;line-height:1.6;color:inherit;";
         wrapper.dataset.translate = "processed";
         wrapper.className = "translate-processed-node";
         if (currentShowInfo) {
             const badge = document.createElement('span');
-            badge.style.cssText = "display:inline-flex;align-items:center;gap:4px;font-size:11px;color:rgba(99,102,241,0.8);font-weight:500;margin-bottom:4px;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,0.08);line-height:1;";
-            badge.textContent = '\u2728 ' + translatorName;
+            badge.style.cssText = "display:inline-flex;align-items:center;gap:4px;font-size:11px;color:" + badgeColor + ";font-weight:500;margin-bottom:6px;padding:2px 8px;border-radius:10px;background:" + badgeBg + ";line-height:1;";
+            badge.textContent = badgeIcon + ' ' + translatorName;
             wrapper.appendChild(badge);
             wrapper.appendChild(document.createElement('br'));
         }
         const spanNode = document.createElement('span');
-        spanNode.style.whiteSpace = "pre-wrap";
+        spanNode.style.cssText = "white-space:pre-wrap;font-weight:700;color:" + (isError ? "#ef4444" : "inherit") + ";"
         spanNode.textContent = text;
         wrapper.appendChild(spanNode);
         element.appendChild(wrapper);
